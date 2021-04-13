@@ -17,5 +17,23 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
     if (err) throw err;
-    runSearch();
+    startProgram();
 });
+
+const startProgram = () => {
+    inquirer.prompt({
+        name: 'DB_options',
+        type: 'list',
+        message: 'What would you like to do?',
+        choices: [
+            'View all employees',
+            'View all employees by department',
+            'View all employees by manager',
+            'Add new employee',
+            'Remove employee',
+            'Update employee role',
+            'Update employee manager'
+        ]
+    })
+    .then
+}
