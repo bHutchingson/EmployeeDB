@@ -35,5 +35,35 @@ const startProgram = () => {
             'Update employee manager'
         ]
     })
-    .then
+    .then((answer) => {
+        switch (answer.DB_options) {
+            case 'View all employees':
+                console.log('Viewing all employees');
+                break;
+
+            case 'View all employees by department':
+                console.log('Viewing all employees');
+                break;
+
+            case 'View all employees by manager':
+                console.log('Viewing all employees by manager');
+                break;
+
+            case 'Add new employee':
+                console.log('Adding new employee');
+                break;
+
+            case 'Remove employee':
+                console.log('Removing employee');
+                break;
+
+            case 'Update employee role':
+                console.log('Updating employee role');
+                break;
+
+            case 'Update employee manager':
+                console.log('Updating employee manager');
+                break;
+        }
+    });
 }
