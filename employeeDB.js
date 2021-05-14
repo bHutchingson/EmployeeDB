@@ -65,6 +65,7 @@ const startProgram = () => {
 
             case 'Add new role':
                 console.log('Adding new role...');
+                addRole();
                 break;
 
             case 'Update employee role':
@@ -94,7 +95,6 @@ const viewDepartments = () => {
 
 //shows all roles
 const viewRoles = () => {
-    // Returns a list of all roles
     connection.query('SELECT * FROM role', (err, res) => {
         if (err) throw (err);
         console.table(res);
@@ -104,7 +104,6 @@ const viewRoles = () => {
 
 //add new employee
 const addEmployee = () => {
-    // Creates a new employee row and then displays a new list of all employees
     inquirer
         .prompt([
             {
@@ -137,5 +136,38 @@ const addEmployee = () => {
             })
             console.log('Employee Added')
             viewAllEmployees()
+        })
+}
+
+//add a new role
+const addRole = () => {
+    // Allows the user to create a new role and add it to the database
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'roleName',
+                message: 'What is the name of the role you would like to add?'
+            },
+            {
+                type: 'input',
+                name: 'salary',
+                message: 'What is the starting salary of the role you are adding?'
+            },
+            {
+                type: 'input',
+                name: 'departmentId',
+                message: 'What is the department id for the role you would like to add?'
+            },
+
+        ])
+        .then((answer) => {
+            connection.query('INSERT into role SET ?', {
+                title: answer.roleName,
+                salary: answer.salary,
+                department_id: answer.departmentId
+            })
+            console.log('role Added')
+            viewRoles()
         })
 }
