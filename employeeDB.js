@@ -44,17 +44,19 @@ const startProgram = () => {
                 viewAllEmployees();
                 break;
 
-            case 'View all employees by department':
-                console.log('Viewing all employees by department...');
-                viewEmployeeByDepartment();
+            case 'View all departments':
+                console.log('Viewing all departments...');
+                viewDepartments();
                 break;
 
-            case 'View all employees by manager':
-                console.log('Viewing all employees by manager...');
+            case 'View all roles':
+                console.log('Viewing all roles...');
+                viewRoles();
                 break;
 
             case 'Add new employee':
                 console.log('Adding new employee...');
+                addEmployee();
                 break;
             
             case 'Add new department':
@@ -65,21 +67,14 @@ const startProgram = () => {
                 console.log('Adding new role...');
                 break;
 
-            case 'Remove employee':
-                console.log('Removing employee...');
-                break;
-
             case 'Update employee role':
                 console.log('Updating employee role...');
-                break;
-
-            case 'Update employee manager':
-                console.log('Updating employee manager...');
                 break;
         }
     });
 }
 
+//shows all employees
 const viewAllEmployees = () => {
     connection.query('Select * from employee', function (err,res) {
         if (err) throw (err)
@@ -88,15 +83,16 @@ const viewAllEmployees = () => {
     })
 };
 
+//shows all departments
 const viewDepartments = () => {
-    // Returns a list of all departments
     connection.query('SELECT * FROM department', (err, res) => {
         if (err) throw (err);
         console.table(res);
         startProgram();
     })
-}
+};
 
+//shows all roles
 const viewRoles = () => {
     // Returns a list of all roles
     connection.query('SELECT * FROM role', (err, res) => {
@@ -106,41 +102,40 @@ const viewRoles = () => {
     })
 };
 
-const viewEmployeeByDepartment = () => {
-    inquirer.prompt({
-        name: 'DB_options',
-        type: 'list',
-        message: 'Select a department to view employees',
-        choices: departments
-    })
-    .then((answer) => {
-        for (i=0; i < departments.length; i++) {
-            if (departments[i] === answer) {
-                connection.query(`SELECT  FROM department WHERE `)
-            }
-        };
-             
-        
-        switch (answer.DB_options) {
-            case 'View all employees':
-                console.log('Viewing all employees...');
-                viewAllEmployees();
-                break;
-
-            case 'View all employees by department':
-                console.log('Viewing all employees by department...');
-                viewEmployeeByDepartment();
-                break;
-
-            case 'View all employees by manager':
-                console.log('Viewing all employees by manager...');
-                break;
-
-            case 'Add new employee':
-                console.log('Adding new employee...');
-                break;
-            
-            
-        }
-    });
+//add new employee
+const addEmployee = () => {
+    // Creates a new employee row and then displays a new list of all employees
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'firstName',
+                message: 'What is the first name of the employee?'
+            },
+            {
+                type: 'input',
+                name: 'lastName',
+                message: 'What is the last name of the employee?'
+            },
+            {
+                type: 'input',
+                name: 'roleId',
+                message: 'What is the employee role id?'
+            },
+            {
+                type: 'input',
+                name: 'managerId',
+                message: 'What is the emploee manager id?'
+            },
+        ])
+        .then((answer) => {
+            connection.query('INSERT into employee SET ?', {
+                first_name: answer.firstName,
+                last_name: answer.lastName,
+                role_id: answer.roleId,
+                manager_id: answer.managerId
+            })
+            console.log('Employee Added')
+            viewAllEmployees()
+        })
 }
