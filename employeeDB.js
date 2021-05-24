@@ -61,6 +61,7 @@ const startProgram = () => {
             
             case 'Add new department':
                 console.log('Adding new department...');
+                addDepartment();
                 break;
 
             case 'Add new role':
@@ -70,6 +71,7 @@ const startProgram = () => {
 
             case 'Update employee role':
                 console.log('Updating employee role...');
+                updateRole();
                 break;
         }
     });
@@ -169,5 +171,54 @@ const addRole = () => {
             })
             console.log('role Added')
             viewRoles()
+        })
+}
+
+//add new department
+const addDepartment = () => {
+    // Creates a new department then displays all departments
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'departmentName',
+                message: 'What is the name of the department you would like to add?'
+            },
+
+        ])
+        .then((answer) => {
+            connection.query('INSERT into department SET ?', {
+                department_name: answer.departmentName,
+            })
+            console.log('Department Added')
+            viewDepartments()
+        })
+}
+//update employee role
+const updateRole = () => {
+    // Updates the employee role based on employee id and role id
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'employeeId',
+                message: 'What is the employee id number of the employee you would like to update?'
+            },
+            {
+                type: 'input',
+                name: 'newRole',
+                message: 'What is the new role of the employee?'
+            },
+
+        ]).then((answer) => {
+            connection.query('UPDATE employee SET ? WHERE?', [{
+                role_id: answer.newRole
+            },
+            {
+                id: answer.employeeId
+            }
+            ])
+            console.log('Employee updated')
+            viewAllEmployees()
         })
 }
